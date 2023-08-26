@@ -1,3 +1,48 @@
+<?php
+    $insert = false;
+    if (isset($_POST['name'])) 
+    {   
+        // Set Connection variables
+        $server = "localhost";
+        $username = "root";
+        $password = "";
+        
+        // Create a database connection
+        $con = mysqli_connect($server, $username, $password);
+
+        // Check For Connection Success
+        if(!$con)
+        {
+            die("Connection to this database failed due to ". mysqli_connect_error());
+        }
+
+        // echo "Success Connect to the db"
+        // Collect POST variable
+        $name = $_POST['name'];
+        $email = $_POST['email'];
+        $message = $_POST['message'];
+
+        $sql = "INSERT INTO `trip`.`trip2` (`name`, `email`, `message`) VALUES ('$name', '$email', '$message');";
+        // echo $sql;
+
+        // Execute the Query
+        if($con->query($sql)==true)
+        {
+            //Flag for successful insertion
+            $insert = true;
+            //echo "successfully inserted";
+
+        }
+        else
+        {
+            echo "Error: $sql <br> $con->error";
+        }
+
+        //Close the database connection
+        $con->close();
+    }
+?>
+
 <!DOCTYPE html>
     <html lang="en">
         <head>
@@ -109,20 +154,27 @@
                 </div>
             </section>
             <section id="form-details" class="section-p1">
-                <form action="">
+                <form action="contact.php" method="post">
                     <span>
                         LEAVE A MESSAGE
                     </span>
                     <h2>
                         We love to hear from you
                     </h2>
-                    <input type="text" placeholder="Your Name">
-                    <input type="text" placeholder="E-mail">
-                    <input type="text" placeholder="Subject">
-                    <textarea name="" id="" cols="30" rows="10" placeholder="Your Message"></textarea>
+                    <input type="text" name="name" placeholder="Your Name">
+                    <input type="text" name="email" placeholder="E-mail">
+                    <textarea name="" id="" cols="30" rows="10" placeholder="Your Message" name="message"></textarea>
                     <button class="normal">
                         Submit
                     </button>
+                    <?php
+                        if ($insert == true) 
+                        {
+                        echo "<p class='submitMsg'>
+                        Thanks for submitting the form.
+                        </p>";
+                        }
+                    ?>
                 </form>
                 <div class="people">
                     <div>
